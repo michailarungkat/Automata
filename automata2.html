@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scientific Number Validator</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Montserrat',sans-serif;
+}
+
+body{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+min-height:100vh;
+background:linear-gradient(135deg,#f9eee2,#182f53);
+}
+
+/* MENU */
+
+.menu{
+margin-bottom:20px;
+}
+
+.menu button{
+padding:10px 20px;
+margin:5px;
+border:none;
+background:#9c3725;
+color:white;
+border-radius:5px;
+cursor:pointer;
+font-size:16px;
+}
+
+.menu button:hover{
+background:#7a281c;
+}
+
+/* CONTENT */
+
+.tab{
+display:none;
+}
+
+.active{
+display:block;
+}
+
+/* VALIDATOR BOX */
+
+.container{
+background:rgba(255,255,255,0.95);
+padding:25px;
+border-radius:10px;
+box-shadow:0px 4px 10px rgba(0,0,0,0.2);
+text-align:center;
+width:320px;
+}
+
+h2{
+color:#01235c;
+margin-bottom:15px;
+}
+
+input{
+width:90%;
+padding:10px;
+border:2px solid #ddd;
+border-radius:5px;
+}
+
+button.check{
+margin-top:10px;
+padding:10px 15px;
+background:#9c3725;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+#message{
+margin-top:15px;
+font-size:18px;
+font-weight:bold;
+}
+
+/* ABOUT */
+
+.about{
+background:rgba(255,255,255,0.95);
+padding:25px;
+border-radius:10px;
+width:320px;
+text-align:center;
+box-shadow:0px 4px 10px rgba(0,0,0,0.2);
+}
+
+.about h2{
+margin-bottom:10px;
+}
+
+.about p{
+margin:6px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- MENU TAB -->
+
+<div class="menu">
+<button onclick="showTab('home')">Home</button>
+<button onclick="showTab('about')">About</button>
+</div>
+
+<!-- HOME TAB -->
+
+<div id="home" class="tab active">
+<div class="container">
+
+<h2>Scientific Number Validator</h2>
+
+<input type="text" id="inputNumber" placeholder="Enter a number">
+
+<br>
+
+<button class="check" onclick="validateNumber()">Check</button>
+
+<p id="message"></p>
+
+</div>
+</div>
+
+<!-- ABOUT TAB -->
+
+<div id="about" class="tab">
+<div class="about">
+
+<h2>About</h2>
+
+<p><b>Name :</b> Michaila G. K. Rungkat</p>
+<p><b>NIM :</b> 241011060071</p>
+<p><b>Class :</b> SI - C</p>
+<p><b>Course :</b> Automata Theory</p>
+<p><b>Faculty :</b> Fakultas Matematika & Ilmu Pengetahuan ALam</p>
+<p><b>University :</b> Universitas Sam Ratulangi</p>
+
+</div>
+</div>
+
+<script>
+
+function showTab(tabId){
+
+document.querySelectorAll('.tab').forEach(tab=>{
+tab.classList.remove('active');
+});
+
+document.getElementById(tabId).classList.add('active');
+
+}
+
+function validateNumber(){
+
+const input=document.getElementById('inputNumber').value.trim();
+
+const scientificNumberPattern=/^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
+
+if(input===''){
+document.getElementById('message').innerText="Please enter a number";
+document.getElementById('message').style.color="orange";
+}
+
+else if(scientificNumberPattern.test(input)){
+document.getElementById('message').innerText="Yes, it is a scientific number";
+document.getElementById('message').style.color="green";
+}
+
+else{
+document.getElementById('message').innerText="No, it is not a scientific number";
+document.getElementById('message').style.color="red";
+}
+
+}
+
+document.getElementById('inputNumber').addEventListener('keypress',function(event){
+
+if(event.key==='Enter'){
+validateNumber();
+}
+
+});
+
+</script>
+
+</body>
+</html>
