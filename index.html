@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Number Validator - Montserrat Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* PALET WARNA BARU */
+            --bg-deep: #1D2B44;      /* Navy */
+            --cream: #F5EBDD;        /* Cream */
+            --coral: #F47C51;        /* Coral */
+            --dark-red: #9C3725;     /* Deep Red */
+            --glass: rgba(245, 235, 221, 0.1);
+            --glass-border: rgba(245, 235, 221, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--bg-deep);
+            background-image: radial-gradient(circle at center, #2a3d5f 0%, #1D2B44 100%);
+            overflow: hidden;
+            color: var(--cream);
+        }
+
+        /* EFEK PARTIKEL (BUIH) */
+        .bubbles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            width: 40px;
+            height: 40px;
+            background: var(--coral);
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: rise 10s infinite ease-in;
+        }
+
+        @keyframes rise {
+            from { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+            to { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+        }
+
+        /* MENU BAR */
+        .menu {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            background: rgba(29, 43, 68, 0.6);
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            z-index: 100;
+        }
+
+        .menu-item {
+            position: relative;
+        }
+
+        /* Jembatan Transparan agar dropdown tidak putus saat kursor bergerak ke bawah */
+        .menu-item::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            display: block;
+        }
+
+        .menu button {
+            padding: 8px 18px;
+            border: none;
+            background: transparent;
+            color: var(--cream);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .menu button:hover {
+            background: var(--coral);
+            color: var(--bg-deep);
+        }
+
+        /* DROPDOWN - Dibuat Lebih Hidup */
+        .dropdown {
+            display: block; /* Selalu block agar transition jalan */
+            position: absolute;
+            top: 45px;
+            left: 0;
+            background: var(--cream);
+            color: var(--bg-deep);
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 200;
+
+            /* Efek Animasi & Delay */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .menu-item:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+            transition-delay: 0s;
+        }
+
+        /* Memberikan sedikit jeda tutup agar tidak kaku */
+        .menu-item .dropdown {
+            transition-delay: 0.1s;
+        }
+
+        .dropdown div {
+            padding: 12px 15px;
+            font-size: 13px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .dropdown div:hover {
+            background: var(--coral);
+            color: white;
+            padding-left: 20px; /* Efek interaktif tambahan */
+        }
+
+        /* CONTAINER */
+        .container, .about {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { 
+            margin-bottom: 25px; 
+            font-weight: 700; 
+            color: var(--coral);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            outline: none;
+            background: var(--cream);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 400;
+            transition: 0.3s;
+            color: var(--bg-deep);
+        }
+
+        input:focus {
+            border-color: var(--coral);
+            box-shadow: 0 0 15px rgba(244, 124, 81, 0.3);
+        }
+
+        button.check {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            background: var(--coral);
+            color: white;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button.check:hover {
+            background: var(--dark-red);
+            transform: scale(1.02);
+        }
+
+        .history {
+            margin-top: 25px;
+            font-size: 12px;
+            height: 120px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            border: 1px solid var(--glass-border);
+            font-weight: 400;
+        }
+
+        .history div {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(245, 235, 221, 0.1);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--coral); border-radius: 10px; }
+
+        .tab { display: none; }
+        .active { display: block; }
+
+        b { font-weight: 700; color: var(--coral); }
+    </style>
+</head>
+<body>
+
+    <div class="bubbles" id="bubbleContainer"></div>
+
+    <div class="menu">
+        <button onclick="showTab('home')">Home</button>
+        <div class="menu-item">
+            <button>Edit</button>
+            <div class="dropdown">
+                <div onclick="undo()">Undo</div>
+                <div onclick="redo()">Redo</div>
+                <div onclick="copyText()">Copy</div>
+                <div onclick="pasteText()">Paste</div>
+                <div onclick="clearInput()">Clear Input</div>
+            </div>
+        </div>
+        <div class="menu-item">
+            <button>Run</button>
+            <div class="dropdown">
+                <div onclick="validateNumber()">Validate</div>
+                <div onclick="validateBatch()">Batch Test</div>
+                <div onclick="autoValidate()">Auto Run</div>
+                <div onclick="stopAuto()">Stop</div>
+            </div>
+        </div>
+        <button onclick="showTab('about')">About</button>
+    </div>
+
+    <div id="home" class="tab active">
+        <div class="container">
+            <h2>Scientific Number Validator</h2>
+            <input type="text" id="inputNumber" placeholder="Contoh: 6.02e23" autocomplete="off">
+            <button class="check" onclick="validateNumber()">Check</button>
+            <p id="message" style="margin-top: 15px; font-weight: 700; min-height: 24px;"></p>
+            <div class="history" id="history">
+                <span style="opacity: 0.5;">Logs will appear here...</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="about" class="tab">
+        <div class="about">
+            <h2>Profile</h2>
+            <div style="text-align: left; line-height: 2; font-weight: 400;">
+                <p><b>Name:</b> Michaila G. K. Rungkat</p>
+                <p><b>NIM:</b> 241011060071</p>
+                <p><b>Class:</b> Information System - C</p>
+                <p><b>Course:</b> Teori Bahasa & Automata</p>
+                <p><b>University:</b> Universitas Sam Ratulangi</p>
+            </div>
+            <button class="check" style="margin-top: 30px;" onclick="showTab('home')">Back Home</button>
+        </div>
+    </div>
+
+    <script>
+        // BUBBLES GENERATOR
+        const container = document.getElementById('bubbleContainer');
+        for (let i = 0; i < 15; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.width = bubble.style.height = (Math.random() * 30 + 10) + 'px';
+            bubble.style.animationDelay = (Math.random() * 10) + 's';
+            bubble.style.animationDuration = (Math.random() * 12 + 8) + 's';
+            container.appendChild(bubble);
+        }
+
+        let historyLog = [];
+        let autoInterval = null;
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function validateNumber() {
+            const input = document.getElementById('inputNumber').value.trim();
+            const msg = document.getElementById('message');
+            const regex = /^[+-]?(\d+(\.\d+)?|\.\d+)[eE][+-]?\d+$/;
+
+            if (input === "") {
+                msg.innerText = "⚠️ Input Required";
+                msg.style.color = "#F47C51";
+                return;
+            }
+
+            let result = "";
+            if (regex.test(input)) {
+                result = `VALID: ${input}`;
+                msg.style.color = "#4ade80"; 
+            } else {
+                result = `INVALID: ${input}`;
+                msg.style.color = "#9C3725"; 
+            }
+
+            msg.innerText = result;
+            historyLog.unshift(result);
+            updateHistory();
+        }
+
+        function updateHistory() {
+            const historyDiv = document.getElementById('history');
+            historyDiv.innerHTML = historyLog.map(item => `<div>${item}</div>`).join("");
+        }
+
+        function clearInput() { document.getElementById('inputNumber').value = ""; }
+        
+        function copyText() { 
+            const val = document.getElementById('inputNumber').value;
+            if(!val) return;
+            navigator.clipboard.writeText(val);
+            alert("Copied!");
+        }
+
+        function pasteText() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('inputNumber').value = text;
+            });
+        }
+
+        function validateBatch() {
+            const samples = ["1.5e10", "-0.5E+3", "error_test", "9.9e-9"];
+            let i = 0;
+            const timer = setInterval(() => {
+                if(i >= samples.length) { clearInterval(timer); return; }
+                document.getElementById('inputNumber').value = samples[i];
+                validateNumber();
+                i++;
+            }, 800);
+        }
+
+        function autoValidate() {
+            if(autoInterval) return;
+            autoInterval = setInterval(() => {
+                let num = (Math.random() * 10).toFixed(2) + "e" + Math.floor(Math.random() * 15);
+                document.getElementById('inputNumber').value = num;
+                validateNumber();
+            }, 2000);
+        }
+
+        function stopAuto() {
+            clearInterval(autoInterval);
+            autoInterval = null;
+        }
+
+        function undo() { alert("Undo is not available in this version."); }
+        function redo() { alert("Redo is not available in this version."); }
+    </script>
+
+</body>
+</html>
